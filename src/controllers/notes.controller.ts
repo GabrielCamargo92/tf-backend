@@ -46,7 +46,7 @@ export class NotesController {
         });
       }
 
-      if (!status) {
+      if (status) {
         return res.status(404).send({
           ok: false,
           message: "Status not found",
@@ -69,9 +69,9 @@ export class NotesController {
     }
   }
 
-  public getById(req: Request, res: Response) {
+  public getNotes(req: Request, res: Response) {
     try {
-      const { userId, noteId } = req.params;
+      const { userId } = req.params;
 
       const database = new UserDatabase();
       const user = database.getUserId(userId);
@@ -80,13 +80,7 @@ export class NotesController {
         return RequestError.notFound(res, "User");
       }
 
-      const noteFinded = user.notes.find((notes) => notes.id === noteId);
-
-      if (!noteFinded) {
-        return RequestError.notFound(res, "Note");
-      }
-
-      return SuccessResponse.ok(res, "Exibindo Notes", noteFinded);
+      return SuccessResponse.ok(res, "Exibindo notas do usuário", user.Notes);
     } catch (error: any) {
       return ServerError.genericError(res, error);
     }

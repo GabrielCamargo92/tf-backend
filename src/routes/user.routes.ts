@@ -35,6 +35,8 @@ export const userRoutes = () => {
   // POST http://localhost:4444/user/:id/transactions
   app.post("/:userId/notes", new NotesController().create);
 
+  app.get("/:userId/userNotes", new NotesController().getNotes);
+
   // DELETE http://localhost:4444/user/:userId/transactions/:idTransaction
   app.delete("/:userId/notes/:idNotes", new NotesController().delete);
 
