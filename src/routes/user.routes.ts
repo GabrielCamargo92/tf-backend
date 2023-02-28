@@ -14,14 +14,14 @@ export const userRoutes = () => {
 
   // GET http://localhost:4444/
   app.post(
-    "/user/login",
+    "/login",
     UserValidatorMiddleware.validateMandatoryFields,
     new UsernameController().login
   );
 
   // POST http://localhost:4444/
   app.post(
-    "/user/createLogin",
+    "/createLogin",
     [UserValidatorMiddleware.validateMandatoryFields],
     new UsernameController().create
   );
@@ -33,20 +33,20 @@ export const userRoutes = () => {
   // app.put("/:id", new UsernameController());
 
   // POST http://localhost:4444/user/:id/transactions
-  app.post("/:userId/notes", new NotesController().create);
+  app.post("/:idUser/notes", new NotesController().create);
 
-  app.get("/:userId/userNotes", new NotesController().getNotes);
+  app.get("/:idUser/userNotes", new NotesController().getNotes);
 
   // DELETE http://localhost:4444/user/:userId/transactions/:idTransaction
-  app.delete("/:userId/notes/:idNotes", new NotesController().delete);
+  app.delete("/:idUser/notes/:idNotes", new NotesController().delete);
 
   //GET - Filtrar pelo id do user http://localhost:4444/user/:userId/transactions/   <-- via req.query
-  app.get("/:userId/notes/", new NotesController().notesFilter);
+  app.get("/:idUser/notes/", new NotesController().notesFilter);
 
   //GET - Filtrar pelo ID da transaction - http://localhost:4444/user/:userId/transactions/:transactionId
-  app.get("/:userId/notes/:noteId", new NotesController().listById);
+  app.get("/:idUser/notes/:noteId", new NotesController().listById);
 
-  app.put("/:userId/notes/:idNote", new NotesController().editNotes);
+  app.put("/:idUser/notes/:idNote", new NotesController().editNotes);
 
   return app;
 };

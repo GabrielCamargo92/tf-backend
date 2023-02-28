@@ -13,12 +13,12 @@ export class NotesController {
   // http://localhost:4444/user/5bd700e3-88ea-453a-ba62-27633d4a1f8b/transactions
   public create(req: Request, res: Response) {
     try {
-      const { userId } = req.params;
+      const { idUser } = req.params;
       const { description, detailing, status } = req.body;
       const database = new UserDatabase();
-      const user = database.getUserId(userId);
+      const user = database.getUserId(idUser);
 
-      if (!userId) {
+      if (!idUser) {
         return res.status(400).send({
           ok: false,
           message: "Id user not found",
@@ -71,10 +71,10 @@ export class NotesController {
 
   public getNotes(req: Request, res: Response) {
     try {
-      const { userId } = req.params;
+      const { idUser } = req.params;
 
       const database = new UserDatabase();
-      const user = database.getUserId(userId);
+      const user = database.getUserId(idUser);
 
       if (!user) {
         return RequestError.notFound(res, "User");
@@ -89,8 +89,8 @@ export class NotesController {
   // http://localhost:4444/user/5bd700e3-88ea-453a-ba62-27633d4a1f8b/skill/nodejs
   public delete(req: Request, res: Response) {
     try {
-      const { userId, noteId } = req.params;
-      const user = usernames.find((user) => user.idUser === userId);
+      const { idUser, noteId } = req.params;
+      const user = usernames.find((user) => user.idUser === idUser);
       if (!user) {
         return RequestError.notFound(res, "User");
       }
@@ -115,9 +115,9 @@ export class NotesController {
   public notesFilter(req: Request, res: Response) {
     /////////////////////original
     try {
-      const { userId } = req.params;
+      const { idUser } = req.params;
       const { description, status } = req.query;
-      const user = usernames.find((user) => user.idUser === userId);
+      const user = usernames.find((user) => user.idUser === idUser);
       if (!user) {
         return RequestError.notFound(res, "User");
       }
@@ -167,8 +167,8 @@ export class NotesController {
 
   public listById(req: Request, res: Response) {
     try {
-      const { userId, noteId } = req.params;
-      const user = usernames.find((user) => user.idUser === userId);
+      const { idUser, noteId } = req.params;
+      const user = usernames.find((user) => user.idUser === idUser);
       if (!user) {
         return RequestError.notFound(res, "User");
       }
@@ -188,9 +188,9 @@ export class NotesController {
 
   public editNotes(req: Request, res: Response) {
     try {
-      const { userId, idNote } = req.params;
+      const { idUser, idNote } = req.params;
       const { description, detailing, status } = req.body;
-      const user = usernames.find((user) => user.idUser === userId);
+      const user = usernames.find((user) => user.idUser === idUser);
       if (!user) {
         return RequestError.notFound(res, "User");
       }

@@ -38,6 +38,7 @@ export class UsernameController {
           id: user.idUser,
           username: user.username,
           logged: user.logged,
+          // notes: user.notes,
         },
       });
     } catch (error: any) {
@@ -62,10 +63,10 @@ export class UsernameController {
 
   public delete(req: Request, res: Response) {
     try {
-      const { id } = req.params;
+      const { idUser } = req.params;
 
       const database = new UserDatabase();
-      const userIndex = database.getUserIndex(id);
+      const userIndex = database.getUserIndex(idUser);
 
       if (userIndex < 0) {
         return res.status(404).send({

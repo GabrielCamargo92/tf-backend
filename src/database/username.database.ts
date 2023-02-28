@@ -13,6 +13,10 @@ export class UserDatabase {
     return usernames.find((item) => item.username === username && item.password === password);
   }
 
+  public getUsername(username: string) {
+    return usernames.find((item) => item.username === username);
+  }
+
   public getUserIndex(id: string) {
     return usernames.findIndex((item) => item.idUser === id);
   }

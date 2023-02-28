@@ -6,14 +6,14 @@ import { ServerError } from "../errors/server.error";
 export class TransactionValidatorMiddleware {
   public static validateMandatoryFields(req: Request, res: Response, next: NextFunction) {
     try {
-      const { userId } = req.params;
+      const { idUser } = req.params;
       const { title, value, type } = req.body;
 
       const database = new UserDatabase();
-      const user = database.getOne(userId);
+      const user = database.getUsername(idUser);
 
-      if (!userId) {
-        return RequestError.fieldNotProvided(res, "userId");
+      if (!idUser) {
+        return RequestError.fieldNotProvided(res, "idUser");
       }
 
       if (!user) {
@@ -47,13 +47,13 @@ export class TransactionValidatorMiddleware {
 
   public static validateUserExists(req: Request, res: Response, next: NextFunction) {
     try {
-      const { userId } = req.params;
+      const { idUser } = req.params;
 
       const database = new UserDatabase();
-      const user = database.getOne(userId);
+      const user = database.getUsername(idUser);
 
-      if (!userId) {
-        return RequestError.fieldNotProvided(res, "userId");
+      if (!idUser) {
+        return RequestError.fieldNotProvided(res, "idUser");
       }
 
       if (!user) {
