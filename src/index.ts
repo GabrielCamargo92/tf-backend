@@ -11,6 +11,6 @@ app.use(cors());
 
 app.use("/", userRoutes());
 
-app.listen(4444, () => {
+app.listen(process.env.PORT, () => {
   console.log("API está rodando na porta 4444!");
 });

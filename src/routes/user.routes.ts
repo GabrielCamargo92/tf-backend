@@ -38,7 +38,7 @@ export const userRoutes = () => {
   app.get("/:idUser/userNotes", new NotesController().getNotes);
 
   // DELETE http://localhost:4444/user/:userId/transactions/:idTransaction
-  app.delete("/:idUser/notes/:idNotes", new NotesController().delete);
+  app.delete("/:idUser/notes/:noteId", new NotesController().delete);
 
   //GET - Filtrar pelo id do user http://localhost:4444/user/:userId/transactions/   <-- via req.query
   app.get("/:idUser/notes/", new NotesController().notesFilter);
@@ -46,7 +46,7 @@ export const userRoutes = () => {
   //GET - Filtrar pelo ID da transaction - http://localhost:4444/user/:userId/transactions/:transactionId
   app.get("/:idUser/notes/:noteId", new NotesController().listById);
 
-  app.put("/:idUser/notes/:idNote", new NotesController().editNotes);
+  app.put("/:idUser/notes/:noteId", new NotesController().editNotes);
 
   return app;
 };

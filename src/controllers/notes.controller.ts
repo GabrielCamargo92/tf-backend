@@ -86,7 +86,7 @@ export class NotesController {
     }
   }
 
-  // http://localhost:4444/user/5bd700e3-88ea-453a-ba62-27633d4a1f8b/skill/nodejs
+  // http://localhost:4444/5bd700e3-88ea-453a-ba62-27633d4a1f8b/skill/nodejs
   public delete(req: Request, res: Response) {
     try {
       const { idUser, noteId } = req.params;
