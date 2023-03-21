@@ -10,11 +10,53 @@ import { Username } from "../models/username.model";
 import { SuccessResponse } from "../util/success.response";
 
 export class NotesController {
+  public listAll(req: Request, res: Response) {
+    try {
+      const { idUser } = req.params;
+      const { description, filed } = req.query;
+
+      const database = new UserDatabase();
+      const user = database.getUserId(idUser);
+
+      let noteList = user?.Notes;
+
+      if (description) {
+        noteList = noteList?.filter(
+          (note) =>
+            note.description.toString().toLowerCase() === description?.toString().toLowerCase()
+        );
+      }
+
+      if (filed !== undefined && filed !== "") {
+        const isFiled = filed?.toString().toLowerCase() === "true";
+        noteList = noteList?.filter((note) => note.filed === isFiled);
+      }
+
+      return SuccessResponse.ok(res, "Exibindo notas do usuário", noteList);
+    } catch (error: any) {
+      return ServerError.genericError(res, error);
+    }
+  }
+
+  public listOne(req: Request, res: Response) {
+    try {
+      const { idUser, noteId } = req.params;
+
+      const database = new UserDatabase();
+      const user = database.getUserId(idUser);
+
+      const note = user?.notes.find((note) => note.id === noteId);
+
+      return SuccessResponse.ok(res, "Note successfully listed", note);
+    } catch (error: any) {
+      return ServerError.genericError(res, error);
+    }
+  }
   // http://localhost:4444/user/5bd700e3-88ea-453a-ba62-27633d4a1f8b/transactions
   public create(req: Request, res: Response) {
     try {
       const { idUser } = req.params;
-      const { description, detailing, status } = req.body;
+      const { description, detailing } = req.body;
       const database = new UserDatabase();
       const user = database.getUserId(idUser);
 
@@ -46,41 +88,14 @@ export class NotesController {
         });
       }
 
-      if (status) {
-        return res.status(404).send({
-          ok: false,
-          message: "Status not found",
-        });
-      }
-
       const newNotes = new Notes(description, detailing);
       user.Notes = user.notes.concat(newNotes);
 
       return res.status(201).send({
         ok: true,
         message: "Note success created",
-        data: user,
+        data: newNotes,
       });
-    } catch (error: any) {
-      return res.status(500).send({
-        ok: false,
-        message: error.toString(),
-      });
-    }
-  }
-
-  public getNotes(req: Request, res: Response) {
-    try {
-      const { idUser } = req.params;
-
-      const database = new UserDatabase();
-      const user = database.getUserId(idUser);
-
-      if (!user) {
-        return RequestError.notFound(res, "User");
-      }
-
-      return SuccessResponse.ok(res, "Exibindo notas do usuário", user.Notes);
     } catch (error: any) {
       return ServerError.genericError(res, error);
     }
@@ -90,7 +105,9 @@ export class NotesController {
   public delete(req: Request, res: Response) {
     try {
       const { idUser, noteId } = req.params;
+
       const user = usernames.find((user) => user.idUser === idUser);
+
       if (!user) {
         return RequestError.notFound(res, "User");
       }
@@ -107,6 +124,35 @@ export class NotesController {
         ok: true,
         message: `Note was successfully deleted!`,
       });
+    } catch (error: any) {
+      return ServerError.genericError(res, error);
+    }
+  }
+
+  public editNotes(req: Request, res: Response) {
+    try {
+      const { idUser, noteId } = req.params;
+      const { description, detailing, filed } = req.body;
+
+      const database = new UserDatabase();
+      const user = database.getUserId(idUser);
+
+      const noteList = user?.notes;
+      const note = noteList?.find((note) => note.id === noteId);
+
+      if (description) {
+        note!.description = description;
+      }
+
+      if (detailing) {
+        note!.detailing = detailing;
+      }
+
+      if (filed !== undefined) {
+        note!.filed = filed;
+      }
+
+      return SuccessResponse.ok(res, "Note successfully updated", { note, noteList });
     } catch (error: any) {
       return ServerError.genericError(res, error);
     }
@@ -129,7 +175,7 @@ export class NotesController {
           id: item.id,
           description: item.description,
           detailing: item.detailing,
-          status: item.status,
+          status: item.filed,
         };
       });
 
@@ -146,7 +192,7 @@ export class NotesController {
       }
 
       if (status) {
-        let filterStatus = allNotes.filter((note: Notes) => note.status === Boolean(status));
+        let filterStatus = allNotes.filter((note: Notes) => note.filed === Boolean(status));
 
         res.status(200).send({
           ok: true,
@@ -159,63 +205,6 @@ export class NotesController {
 
       return res.status(200).send({
         notes: notesToJason,
-      });
-    } catch (error: any) {
-      return ServerError.genericError(res, error);
-    }
-  }
-
-  public listById(req: Request, res: Response) {
-    try {
-      const { idUser, noteId } = req.params;
-      const user = usernames.find((user) => user.idUser === idUser);
-      if (!user) {
-        return RequestError.notFound(res, "User");
-      }
-      const note = user.notes.find((note) => note.id === noteId);
-      if (!note) {
-        return RequestError.notFound(res, "Note");
-      }
-      return res.status(200).send({
-        ok: true,
-        message: "Note is here!",
-        data: note,
-      });
-    } catch (error: any) {
-      return ServerError.genericError(res, error);
-    }
-  }
-
-  public editNotes(req: Request, res: Response) {
-    try {
-      const { idUser, idNote } = req.params;
-      const { description, detailing, status } = req.body;
-      const user = usernames.find((user) => user.idUser === idUser);
-      if (!user) {
-        return RequestError.notFound(res, "User");
-      }
-      const note = user.notes.find((note) => note.id === idNote);
-      if (!note) {
-        return RequestError.notFound(res, "Note");
-      }
-
-      const indexNote = user.notes.findIndex((note) => note.id === idNote);
-
-      if (description) {
-        note.description = description;
-      }
-      if (detailing) {
-        note.detailing = detailing;
-      }
-
-      if (status) {
-        note.status = status;
-      }
-
-      return res.status(200).send({
-        ok: true,
-        message: "Note successfully updated",
-        data: note,
       });
     } catch (error: any) {
       return ServerError.genericError(res, error);

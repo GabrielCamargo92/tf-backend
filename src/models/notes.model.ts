@@ -2,11 +2,11 @@ import { v4 as createUuid } from "uuid";
 
 export class Notes {
   private _id: string;
-  private _status: boolean;
+  private _filed: boolean;
 
   constructor(private _description: string, private _detailing: string) {
     this._id = createUuid();
-    this._status = false;
+    this._filed = false;
   }
   // getter
   public get id() {
@@ -21,8 +21,8 @@ export class Notes {
     return this._detailing;
   }
 
-  public get status() {
-    return this._status;
+  public get filed() {
+    return this._filed;
   }
 
   //setter
@@ -35,7 +35,7 @@ export class Notes {
     this._detailing = detailing;
   }
 
-  public set status(status: boolean) {
-    this._status = status;
+  public set filed(filed: boolean) {
+    this._filed = filed;
   }
 }

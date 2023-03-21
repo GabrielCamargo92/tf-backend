@@ -27,26 +27,20 @@ export const userRoutes = () => {
   );
 
   // DELETE http://localhost:4444/user/abc-1234
-  app.delete("/:id", new UsernameController().delete);
+  app.delete("/:idUser", new UsernameController().delete);
 
-  // PUT http://localhost:4444/user/abc-1234
-  // app.put("/:id", new UsernameController());
+  //notas
+  app.get("/:idUser/userNotes", new NotesController().listAll);
 
-  // POST http://localhost:4444/user/:id/transactions
-  app.post("/:idUser/notes", new NotesController().create);
+  // app.get("/:idUser/userNotes", new NotesController().notesFilter);
 
-  app.get("/:idUser/userNotes", new NotesController().getNotes);
+  app.get("/:idUser/userNotes/:noteId", new NotesController().listOne);
 
-  // DELETE http://localhost:4444/user/:userId/transactions/:idTransaction
-  app.delete("/:idUser/notes/:noteId", new NotesController().delete);
+  app.post("/:idUser/userNotes", new NotesController().create);
 
-  //GET - Filtrar pelo id do user http://localhost:4444/user/:userId/transactions/   <-- via req.query
-  app.get("/:idUser/notes/", new NotesController().notesFilter);
+  app.put("/:idUser/userNotes/:noteId", new NotesController().editNotes);
 
-  //GET - Filtrar pelo ID da transaction - http://localhost:4444/user/:userId/transactions/:transactionId
-  app.get("/:idUser/notes/:noteId", new NotesController().listById);
-
-  app.put("/:idUser/notes/:noteId", new NotesController().editNotes);
+  app.delete("/:idUser/userNotes/:noteId", new NotesController().delete);
 
   return app;
 };
